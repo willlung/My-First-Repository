@@ -52,7 +52,13 @@
             margin-top: 15px;
             text-align: left;
             display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .file-item {
+            display: flex;
             align-items: center;
+            margin-bottom: 5px;
         }
         .file-icon {
             margin-right: 10px;
@@ -66,14 +72,11 @@
 <div class="upload-container">
     <h2>Upload Receipt</h2>
     <div class="upload-area" id="uploadArea">
-        Drag & Drop your file here or click to select
+        Drag & Drop your files here or click to select
     </div>
-    <input type="file" id="fileInput" accept="image/*,application/pdf" />
+    <input type="file" id="fileInput" accept="image/*,application/pdf" multiple />
     <button id="uploadButton">Upload</button>
-    <div class="file-info" id="fileInfo" style="display: none;">
-        <span class="file-icon" id="fileIcon"></span>
-        <span id="fileName"></span>
-    </div>
+    <div class="file-info" id="fileInfo" style="display: none;"></div>
 </div>
 
 <script>
@@ -81,8 +84,6 @@
     const fileInput = document.getElementById('fileInput');
     const uploadButton = document.getElementById('uploadButton');
     const fileInfo = document.getElementById('fileInfo');
-    const fileName = document.getElementById('fileName');
-    const fileIcon = document.getElementById('fileIcon');
 
     const getFileIcon = (fileType) => {
         if (fileType.startsWith('image/')) {
@@ -113,24 +114,33 @@
         const files = event.dataTransfer.files;
         if (files.length > 0) {
             fileInput.files = files;
-            displayFileInfo(files[0]);
+            displayFileInfo(files);
         }
     });
 
     uploadButton.addEventListener('click', () => {
         const files = fileInput.files;
         if (files.length > 0) {
-            console.log(files[0]);
+            console.log(files);
             // You can implement the upload logic here
         } else {
             alert('Please select a file to upload.');
         }
     });
 
-    const displayFileInfo = (file) => {
-        fileName.textContent = `${file.name} (${file.type})`;
-        fileIcon.textContent = getFileIcon(file.type);
+    const displayFileInfo = (fileList) => {
+        fileInfo.innerHTML = ''; // Clear previous file info
         fileInfo.style.display = 'flex'; // Show the file info
+
+        Array.from(fileList).forEach(file => {
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
+            fileItem.innerHTML = `
+                <span class="file-icon">${getFileIcon(file.type)}</span>
+                <span>${file.name} (${file.type})</span>
+            `;
+            fileInfo.appendChild(fileItem);
+        });
     };
 </script>
 
