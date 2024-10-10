@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Drop File Upload</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .upload-container {
+            border: 2px dashed #007bff;
+            border-radius: 10px;
+            width: 300px;
+            padding: 20px;
+            text-align: center;
+            background-color: white;
+        }
+        .upload-area {
+            border: 2px dashed #007bff;
+            padding: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .upload-area.dragover {
+            background-color: #e9f5ff;
+        }
+        #fileInput {
+            display: none;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="upload-container">
+    <h2>Upload Receipt</h2>
+    <div class="upload-area" id="uploadArea">
+        Drag & Drop your file here or click to select
+    </div>
+    <input type="file" id="fileInput" accept="image/*,application/pdf" />
+    <button id="uploadButton">Upload</button>
+</div>
+
+<script>
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const uploadButton = document.getElementById('uploadButton');
+
+    uploadArea.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    uploadArea.addEventListener('dragover', (event) => {
+        event.preventDefault();
+        uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', (event) => {
+        event.preventDefault();
+        uploadArea.classList.remove('dragover');
+        const files = event.dataTransfer.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+        }
+    });
+
+    uploadButton.addEventListener('click', () => {
+        const files = fileInput.files;
+        if (files.length > 0) {
+            // Handle the file upload (e.g., send to server)
+            console.log(files[0]);
+            // You can implement the upload logic here
+        } else {
+            alert('Please select a file to upload.');
+        }
+    });
+</script>
+
+</body>
+</html>
